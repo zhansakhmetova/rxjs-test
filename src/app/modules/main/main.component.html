@@ -1,0 +1,24 @@
+<main>
+  <form [formGroup]="formGroup">
+    <input type="text" formControlName="email" (keyup)="searchBy()">
+    <div *ngFor="let info of statuses; let i = index">
+      <input type="checkbox"
+             (change)="onChange($event)"
+             [value]="info">{{info}}
+    </div>
+
+  </form>
+
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Status</th>
+    </tr>
+    <tr *ngFor="let user of user$ | async ">
+      <td>{{user.email | hideEmail}}</td>
+      <td>{{user.id}}</td>
+      <td>{{user.status}}</td>
+    </tr>
+  </table>
+</main>
