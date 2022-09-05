@@ -7,5 +7,5 @@ export interface User {
 
 export interface Response<T> {
   data: T;
-  success: boolean;
+  meta: string;
 }

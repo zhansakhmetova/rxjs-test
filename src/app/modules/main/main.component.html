@@ -1,12 +1,9 @@
 <main>
-  <form [formGroup]="formGroup">
-    <input type="text" formControlName="email" (keyup)="searchBy()">
-    <div *ngFor="let info of statuses; let i = index">
-      <input type="checkbox"
-             (change)="onChange($event)"
-             [value]="info">{{info}}
+  <form [formGroup]="formGroup" >
+    <input type="text" formControlName="email">
+    <div *ngFor="let info of statuses">
+      <input type="radio" name="status" formControlName="status" [value]="info">{{info}}
     </div>
-
   </form>
 
   <table>

@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {UsersService} from "../../core/services/users.service";
-import {debounceTime, distinctUntilChanged, map, Observable, startWith, Subject, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, Observable, startWith, switchMap} from "rxjs";
 import {User} from "../../core/models/user.model";
-import {ParamMap, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-main',
@@ -15,15 +15,23 @@ export class MainComponent implements OnInit {
   user$!: Observable<User[]>
   statuses = ['active', 'inactive'];
 
-  constructor(private fb: FormBuilder, private users: UsersService, private router: Router) {
+  constructor(private fb: FormBuilder, private users: UsersService, private activeRoute: ActivatedRoute,) {
     this.formGroup = this.fb.group({
       email: new FormControl(''),
-      status: this.fb.array([]),
+      status: new FormControl(''),
     })
   }
 
   ngOnInit(): void {
-    this.user$ = this.users.getUsers();
+    this.activeRoute.queryParams.subscribe(params => {
+      if (params['email'] || params['status']) {
+        this.formGroup.patchValue({
+          email: params['email'],
+          status: params['status']
+        })
+      }
+    })
+    this.searchBy();
   }
 
   searchBy() {
@@ -42,14 +50,4 @@ export class MainComponent implements OnInit {
       )
   }
 
-  onChange(event: any) {
-    const formArray: FormArray = this.formGroup.get('status') as FormArray;
-
-    if (event.target.checked) {
-      formArray.push(new FormControl(event.target.value));
-    } else {
-      const index = formArray.controls.findIndex(x => x.value === event.target.value);
-      formArray.removeAt(index);
-    }
-  }
 }

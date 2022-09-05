@@ -16,11 +16,14 @@ export const route: Route[] = [
 
 @NgModule({
   declarations: [MainComponent, HideEmailPipe],
+  exports: [
+
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(route),
     ReactiveFormsModule,
-    CoreModule
+    CoreModule,
   ]
 })
 export class MainModule { }
