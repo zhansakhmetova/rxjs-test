@@ -3,6 +3,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {UsersService} from "../../core/services/users.service";
 import {debounceTime, distinctUntilChanged, map, Observable, startWith, Subject, switchMap} from "rxjs";
 import {User} from "../../core/models/user.model";
+import {ParamMap, Router} from "@angular/router";
 
 @Component({
   selector: 'app-main',
@@ -14,7 +15,7 @@ export class MainComponent implements OnInit {
   user$!: Observable<User[]>
   statuses = ['active', 'inactive'];
 
-  constructor(private fb: FormBuilder, private users: UsersService) {
+  constructor(private fb: FormBuilder, private users: UsersService, private router: Router) {
     this.formGroup = this.fb.group({
       email: new FormControl(''),
       status: this.fb.array([]),
@@ -34,7 +35,7 @@ export class MainComponent implements OnInit {
         switchMap(() => {
             return this.users.searchUsersBy(
               this.formGroup.get('email')?.value,
-              this.formGroup.get('status')?.value == 'active' ? 'active' : 'inactive'
+              this.formGroup.get('status')?.value
             );
           }
         )
